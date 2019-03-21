@@ -6,24 +6,15 @@ const request = (options, cb) => {
     .always(() => console.log('Request completed.'));
 };
 
-// Issue a request to get the list of quotes from the backend server
-const loadQuotes = () => {
-  // Options for the request
-  const reqOptions = {
-    url: '/quotes',
-    method: 'GET',
-    dataType: 'json',
-  };
-
-  const createQuoteEl = quoteObj => {
-    return `<div class="card">
+const createQuoteEl = quoteObj => {
+  return `<div class="card">
   <div class="card-header" id="${quoteObj._id}">
     <h5 class="mb-0">
       <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#${
         quoteObj._id
       }" aria-expanded="true" aria-controls="${
-      quoteObj._id
-    }" style="visibility: visible;">${quoteObj.quote}</button>
+    quoteObj._id
+  }" style="visibility: visible;">${quoteObj.quote}</button>
       <div>
         <form class="quote-update-frm" style="visibility: hidden;">
           <input type="text" name="editquote" class="edit-quote" value="${
@@ -41,20 +32,15 @@ const loadQuotes = () => {
 
   </div>
 </div>`;
-  };
+};
 
-  // loop through the array of quote objects
-  // inside the loop, create each HTML element of each quote
-  // adding each quote HTML element to the DOM
-  const renderQuotes = quotesArr => {
-    // Need to empty the container, in case render is called many times
-    $('#quote-list').empty();
-    for (const quoteObj of quotesArr) {
-      // create an HTML element out of quoteObj
-      const quoteEl = createQuoteEl(quoteObj);
-      // Add the element to the DOM
-      $('#quote-list').prepend(quoteEl);
-    }
+// Issue a request to get the list of quotes from the backend server
+const loadQuotes = () => {
+  // Options for the request
+  const reqOptions = {
+    url: '/quotes',
+    method: 'GET',
+    dataType: 'json',
   };
 
   // calling the request function with the options and callback
@@ -62,6 +48,21 @@ const loadQuotes = () => {
     // loop through the array of quote objects
     renderQuotes(quotesArr);
   });
+};
+
+// loop through the array of quote objects
+// inside the loop, create each HTML element of each quote
+// adding each quote HTML element to the DOM
+const renderQuotes = quotesArr => {
+  // Need to empty the container, in case render is called many times
+  // $('#quote-list').empty();
+
+  for (const quoteObj of quotesArr) {
+    // create an HTML element out of quoteObj
+    const quoteEl = createQuoteEl(quoteObj);
+    // Add the element to the DOM
+    $('#quote-list').prepend(quoteEl);
+  }
 };
 
 $(document).ready(function() {
@@ -88,10 +89,8 @@ $(document).ready(function() {
 
       // sending the ajax POST request to the backend
       request(reqOptions, function(quoteObj) {
-        console.log(quoteObj);
-
         // If we want to add only the new quote
-        renderQuotes(quote);
+        renderQuotes([quoteObj]);
 
         // If we want to reload all the quotes
         // loadQuotes();
