@@ -14,7 +14,8 @@ const MONGODB_URI =
 
 app.use(morgan('dev'));
 app.use(express.static('public'));
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 // Have a db instance in the global scope
 let db = null;
@@ -50,12 +51,14 @@ app.get('/quotes', (req, res) => {
 app.post('/quotes', (req, res) => {
   // extract the content from que request
   const { quote } = req.body;
-
+  console.log(req.body);
   // Crating the structure of the data that needs to be inserted into the database
   const quoteObj = {
     quote: quote,
     comments: [],
   };
+
+  console.log(quoteObj);
   // create an insert query
   db.collection('quotes')
     .insertOne(quoteObj)
